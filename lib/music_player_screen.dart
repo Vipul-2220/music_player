@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,6 +16,10 @@ class MusicPlayerScreen extends StatefulWidget {
 double currentSlider = 0;
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
+  bool isPlaying = false;
+  bool previous = false;
+  bool next = false;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -169,20 +172,49 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Icon(Icons.skip_previous_outlined,
-                                color: Colors.white, size: 40),
-                            Icon(Icons.pause, color: Colors.white, size: 50),
-                            Icon(Icons.skip_next_outlined,
-                                color: Colors.white, size: 40)
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  previous = !previous;
+                                });
+                              },
+                              icon: const Icon(Icons.skip_previous_outlined,
+                                  color: Colors.white, size: 40),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isPlaying = !isPlaying;
+                                  print(isPlaying.toString());
+                                });
+                              },
+                              icon: isPlaying
+                                  ? const Icon(
+                                      Icons.play_arrow,
+                                      color: Colors.white,
+                                      size: 40,
+                                    )
+                                  : const Icon(Icons.pause,
+                                      color: Colors.white, size: 40),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    next = !next;
+                                  });
+                                },
+                                icon: const Icon(Icons.skip_next_outlined,
+                                    color: Colors.white, size: 40)),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
