@@ -48,7 +48,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    'Hello Pathway',
+                    'Hello Colosseuem',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

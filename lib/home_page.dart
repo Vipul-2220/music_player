@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: const [
               Text(
-                'Hello, Pathway',
+                'Hello, Colosseuem',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
@@ -116,7 +116,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void refresh({required Song song}) {
-    setState(() {});
+    setState(() {
+      currentSong = song;
+    });
   }
 }
 
