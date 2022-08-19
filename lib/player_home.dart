@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -15,6 +18,55 @@ class PLayerHome extends StatefulWidget {
 }
 
 class _PLayerHomeState extends State<PLayerHome> {
+  bool isPlaying = false;
+  final audioPlayer = AudioPlayer();
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future setAudio() async {
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
+    final player = AudioCache();
+    final url = await player.load(widget.song.url);
+    audioPlayer.setSourceDeviceFile(url.path);
+    // audioPlayer.setSourceAsset(url.path);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setAudio();
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    log('called');
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -75,23 +127,32 @@ class _PLayerHomeState extends State<PLayerHome> {
                   ],
                 ),
                 Row(
-                  children: const [
-                    Icon(
-                      Icons.pause,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        if (isPlaying) {
+                          await audioPlayer.pause();
+                        } else {
+                          await audioPlayer.resume();
+                        }
+                      },
+                      icon: Icon(!isPlaying ? Icons.play_arrow : Icons.pause),
                       color: Colors.white,
-                      size: 30,
+                      iconSize: 30,
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Icon(
-                      Icons.skip_next_outlined,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    ...const [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      // Icon(
+                      //   Icons.skip_next_outlined,
+                      //   color: Colors.white,
+                      //   size: 30,
+                      // ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                    ],
                   ],
                 ),
               ],
@@ -101,7 +162,7 @@ class _PLayerHomeState extends State<PLayerHome> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  Duration(seconds: currentSlider.toInt())
+                  Duration(seconds: position.inSeconds.toInt())
                       .toString()
                       .split('.')[0]
                       .substring(2),
@@ -120,15 +181,19 @@ class _PLayerHomeState extends State<PLayerHome> {
                       trackHeight: 4,
                     ),
                     child: Slider(
-                      value: currentSlider,
+                      value: position.inSeconds.toDouble(),
                       max: widget.song.duration.toDouble(),
                       min: 0,
                       inactiveColor: Colors.grey[500],
                       activeColor: Colors.white,
-                      onChanged: (val) {
-                        setState(() {
-                          currentSlider = val;
-                        });
+                      onChanged: (val) async {
+                        final posi = Duration(seconds: val.toInt());
+                        // setState(() {
+                        //   currentSlider = val;
+                        // });
+                        await audioPlayer.seek(posi);
+
+                        await audioPlayer.resume();
                       },
                     ),
                   ),

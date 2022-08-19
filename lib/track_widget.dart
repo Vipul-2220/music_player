@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:music_player/database.dart';
 
 class TrackWidget extends StatefulWidget {
-  final Function() notifyParent;
+  final Function({required Song song}) notifyParent;
 
   const TrackWidget({Key? key, required this.notifyParent}) : super(key: key);
 
@@ -22,7 +22,9 @@ class _TrackWidgetState extends State<TrackWidget> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              widget.notifyParent(song: mostPopular[index]);
+            },
             child: Container(
               margin: const EdgeInsets.all(10),
               width: 200,

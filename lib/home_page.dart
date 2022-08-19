@@ -115,14 +115,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  refresh() {
+  void refresh({required Song song}) {
     setState(() {});
   }
 }
 
 Song currentSong = Song(
-  name: 'title',
-  singer: 'singer',
+  'bg1.mp3',
+  name: 'like it doesn\'t hurt',
+  singer: 'Charlie Cardin',
   image: 'assets/song1.jpg',
   duration: 100,
   color: Colors.black,

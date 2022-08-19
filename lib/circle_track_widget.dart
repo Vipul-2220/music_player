@@ -9,7 +9,7 @@ class CircleTrackWdget extends StatefulWidget {
   final String title;
   final List<Song> song;
   final String subtitle;
-  final Function() notifyParent;
+  final Function({required Song song}) notifyParent;
   const CircleTrackWdget(
       {Key? key,
       required this.title,
@@ -61,7 +61,7 @@ class _CircleTrackWdgetState extends State<CircleTrackWdget> {
                     onTap: () {
                       currentSong = widget.song[index];
                       currentSlider = 0;
-                      widget.notifyParent();
+                      widget.notifyParent(song: currentSong);
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
